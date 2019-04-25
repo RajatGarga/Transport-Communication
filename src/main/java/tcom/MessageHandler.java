@@ -28,9 +28,14 @@ public class MessageHandler {
             return null; //TODO error code
         }
         HttpURLConnection con=null;
-        try {
-            con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod(message.getRequestMethod());
+        
+            try {
+				con = (HttpURLConnection) url.openConnection();
+	            con.setRequestMethod(message.getRequestMethod());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+			}
             HashMap<String, String> properties = message.getRequestProperties();
             Iterator it = properties.entrySet().iterator();
             while(it.hasNext()){
@@ -39,26 +44,52 @@ public class MessageHandler {
             }
             if(message.getData() != null ){ //TODO CHECK POST ETC
                 con.setDoOutput(true);
-                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-                wr.writeUTF(message.getData());
-                wr.close();
+                DataOutputStream wr;
+				try {
+					wr = new DataOutputStream(con.getOutputStream());
+	                wr.writeUTF(message.getData());
+	                wr.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+				}
             }
-            int responseCode = con.getResponseCode();
+            int responseCode;
+			try {
+				responseCode = con.getResponseCode();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+				responseCode = 404;
+			}
             if(responseCode == HTTP_OK){
                 System.out.println("Got good response!");
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                String inputLine;
+                BufferedReader in;
                 StringBuffer response = new StringBuffer();
-
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
+				try {
+					in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+	                String inputLine;
+	                while ((inputLine = in.readLine()) != null) {
+	                    response.append(inputLine);
+	                }
+	                in.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+				}
                 return response.toString();
+            }else {
+            	con.disconnect();
+            	System.out.println("Didn't get good response : Network Failure!");
+            	System.out.println("Will try again after 30 seconds");
+            	try {
+					Thread.sleep(30000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            	System.out.println("Retrying...");
+            	return MessageHandler.makeRequest(mess);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }

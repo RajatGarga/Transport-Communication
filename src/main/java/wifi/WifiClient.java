@@ -41,7 +41,7 @@ public class WifiClient implements tcom.NetworkingClient{
 		dos = new DataOutputStream(socket.getOutputStream());
 		dos.writeUTF(s);
 		String received = dis.readUTF(); 
-		System.out.println("received :" + received);
+		//System.out.println("received :" + received);
 		this.disconnect();
 		return received;
 	}

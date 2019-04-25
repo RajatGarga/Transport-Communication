@@ -20,12 +20,12 @@ public class RemoteDeviceDiscovery {
         DiscoveryListener listener = new DiscoveryListener() {
 
             public void deviceDiscovered(RemoteDevice btDevice, DeviceClass cod) {
-                System.out.println("Device " + btDevice.getBluetoothAddress() + " found");
+                //System.out.println("Device " + btDevice.getBluetoothAddress() + " found");
                 devicesDiscovered.addElement(btDevice);
-                try {
+                /*try {
                     System.out.println("     name " + btDevice.getFriendlyName(false));
                 } catch (IOException cantGetDeviceName) {
-                }
+                }*/
             }
 
             public void inquiryCompleted(int discType) {
@@ -47,7 +47,7 @@ public class RemoteDeviceDiscovery {
             if (started) {
                 System.out.println("wait for device inquiry to complete...");
                 inquiryCompletedEvent.wait();
-                System.out.println(devicesDiscovered.size() +  " device(s) found");
+                //System.out.println(devicesDiscovered.size() +  " device(s) found");
             }
         }
     }

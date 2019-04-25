@@ -23,7 +23,6 @@ public class ServicesSearch {
         serviceFound.clear();
 
         UUID serviceUUID = new UUID (0x0008);
-        System.out.println("obex");
         if ((args != null) && (args.length > 0)) {
             serviceUUID = new UUID(args[0], false);
         }
@@ -47,7 +46,8 @@ public class ServicesSearch {
                     serviceFound.add(url);
                     DataElement serviceName = servRecord[i].getAttributeValue(0x0100);
                     if (serviceName != null) {
-                        System.out.println("service " + serviceName.getValue() + " found " + url);
+                        //System.out.println("service " + serviceName.getValue() + " found " + url);
+                    	System.out.println("service found " + url);
                     } else {
                         System.out.println("service found " + url);
                     }
@@ -55,7 +55,7 @@ public class ServicesSearch {
             }
 
             public void serviceSearchCompleted(int transID, int respCode) {
-                System.out.println("service search completed!");
+                //System.out.println("service search completed!");
                 synchronized(serviceSearchCompletedEvent){
                     serviceSearchCompletedEvent.notifyAll();
                 }
@@ -72,12 +72,10 @@ public class ServicesSearch {
             RemoteDevice btDevice = (RemoteDevice)en.nextElement();
 
             synchronized(serviceSearchCompletedEvent) {
-                System.out.println("search services on " + btDevice.getBluetoothAddress() + " " + btDevice.getFriendlyName(false));
+                //System.out.println("search services on " + btDevice.getBluetoothAddress() + " " + btDevice.getFriendlyName(false));
                 LocalDevice.getLocalDevice().getDiscoveryAgent().searchServices(attrIDs, searchUuidSet, btDevice, listener);
                 serviceSearchCompletedEvent.wait();
             }
         }
-
     }
-
 }
