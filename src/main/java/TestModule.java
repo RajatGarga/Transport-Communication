@@ -15,7 +15,10 @@ public class TestModule {
 		// TODO Auto-generated method stub
 		System.out.println("STARTING WIFI CLIENT TEST");
 		System.out.println("=========================");
+		
 		NetworkingClient client = null;
+		
+		
 		Scanner sc = new Scanner(System.in);
 		System.out.print("Enter the local IP addresss of host on WiFi: ");
 		String hostip = sc.nextLine();
@@ -28,6 +31,9 @@ public class TestModule {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
+		
 		if(client != null) {
 			//client.makeConnection();
 			Message message = new Message("small", "high", "required");
@@ -49,6 +55,7 @@ public class TestModule {
 	        	System.out.println("\n"+response+"\n");
 	        }
 		}
+		
 		
 		
 		System.out.println("\n");

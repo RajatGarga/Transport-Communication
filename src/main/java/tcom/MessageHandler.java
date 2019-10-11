@@ -15,8 +15,8 @@ import java.util.Map;
 import static java.net.HttpURLConnection.HTTP_OK;
 
 public class MessageHandler {
-    public static String makeRequest(String mess){
-        Message message = Message.getObjectFromJSON(mess);
+    public static String makeRequest(Message message){
+        
         URL url=null;
         try {
             url = new URL(message.getConnectionURL());
@@ -43,6 +43,7 @@ public class MessageHandler {
                 con.setRequestProperty(pair.getKey(),pair.getValue());
             }
             if(message.getData() != null ){ //TODO CHECK POST ETC
+            	System.out.println("has data" + message.getData());
                 con.setDoOutput(true);
                 DataOutputStream wr;
 				try {
@@ -89,7 +90,7 @@ public class MessageHandler {
 					e.printStackTrace();
 				}
             	System.out.println("Retrying...");
-            	return MessageHandler.makeRequest(mess);
+            	return MessageHandler.makeRequest(message);
             }
     }
 }

@@ -1,0 +1,6 @@
+{
+    "from" : "module1",
+    "to" : "controller",
+    "type" : "",
+    "data" : "JSON DATA"
+}

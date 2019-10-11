@@ -1,23 +1,40 @@
 package tcom;
 
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 
+import java.io.StringReader;
 import java.util.HashMap;
 
 public class Message {
-
+	
+	String from;
+	String to;
     String size;
     String priority;
     String reply;
     connInfo connection;
 
-    public Message(String size, String priority, String reply){
-        this.size = size;
+    public Message(String from, String size, String priority){
+        this.from = from;
+        this.to = "RCC";
+    	this.size = size;
         this.priority = priority;
-        this.reply = reply;
         this.connection = new connInfo();
     }
-
+    
+    public void forController() {
+    	this.to = "controller";
+    }
+    
+    public boolean isForController() {
+    	if(this.to.equals("controller")) {
+    		return true;
+    	}else {
+    		return false;
+    	}
+    }
+    
     public void setConnection(String url, String reqMethod){
         connection.setUrl(url);
         connection.setReqMethod(reqMethod);
@@ -35,7 +52,9 @@ public class Message {
 
     public static Message getObjectFromJSON(String json){
         Gson gson = new Gson();
-        return gson.fromJson(json, Message.class);
+        JsonReader reader = new JsonReader(new StringReader(json));
+        reader.setLenient(true);
+        return gson.fromJson(reader, Message.class);
     }
 
     public String getConnectionURL(){

@@ -8,6 +8,8 @@ import javax.bluetooth.*;
 import javax.microedition.io.Connector;
 import javax.obex.*;
 
+import tcom.Message;
+
 public class OBEXPutServer {
 
     static final String serverUUID = "11111111111111111111111111111123";
@@ -47,7 +49,7 @@ public class OBEXPutServer {
                 String gotJSON = buf.toString();
                 System.out.println("got:" + gotJSON);
                 
-                String response = tcom.MessageHandler.makeRequest(gotJSON);
+                String response = tcom.MessageHandler.makeRequest(Message.getObjectFromJSON(gotJSON));
                 
                 byte data2[] = response.getBytes("iso-8859-1"); 
                 OutputStream os = op.openOutputStream(); 

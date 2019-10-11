@@ -12,7 +12,7 @@ public class TestMessage {
         message.setData("lots and lots and lots of data :P this was supposed to be get");
 
 
-        String response = MessageHandler.makeRequest(message.getJSONString());
+        String response = MessageHandler.makeRequest(message);
         System.out.println("Server says : \n" + response);
     }
 }
