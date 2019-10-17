@@ -12,6 +12,8 @@ import py4j.GatewayServer;
 import tcom.ContInterface;
 import tcom.Message;
 
+
+//This is a thread that handles all the connections that the communication module gets.
 class WifiClientHandler extends Thread  
 {	
 	static DataInputStream controller_dis = null;
@@ -54,6 +56,9 @@ class WifiClientHandler extends Thread
                     } 
                     break; 
                 } else if(received.equals("REGISTER_CONTROLLER")){
+                	/* Save the I/O streams corresponding to controller in the static variables
+                	 * so that all the instances of this thread can access them.
+                	 * */
                 	System.err.println("New Controller Registered!");
                 	controller_dis = dis;
                 	controller_dos = dos;

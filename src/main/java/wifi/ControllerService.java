@@ -6,6 +6,12 @@ import java.util.Scanner;
 import py4j.ClientServer;
 import tcom.ContInterface;
 
+/*
+ * The service to be used by controller module
+ * It registers as a controller using the WifiClient and
+ * then provides a ClientServer gateway so that a python program can access the methods
+ * */
+
 public class ControllerService {
 	static ContInterface PyInt = null;
 	

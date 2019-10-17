@@ -15,6 +15,8 @@ public class Message {
     String reply;
     connInfo connection;
 
+    
+    //By default the message is for the Remote Control Center (RCC)
     public Message(String from, String size, String priority){
         this.from = from;
         this.to = "RCC";

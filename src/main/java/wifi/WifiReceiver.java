@@ -9,6 +9,11 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+
+/*
+ * The service that handles all requests on the communication module
+ * it creates a dedicated thread to serve all the clients
+ * */
 public class WifiReceiver {
 	
 	ServerSocket ss;

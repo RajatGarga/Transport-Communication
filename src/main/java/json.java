@@ -1,5 +1,6 @@
 import tcom.Message;
 
+//JUST FOR TESTING
 public class json {
 
 	public static void main(String[] args) {

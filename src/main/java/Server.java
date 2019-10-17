@@ -3,6 +3,7 @@ import java.text.*;
 import java.util.*;
 import java.net.*;
 
+//JUST FOR TESTING
 
 class ClientHandler extends Thread {
     DateFormat fordate = new SimpleDateFormat("yyyy/MM/dd");

@@ -15,6 +15,8 @@ import java.util.Map;
 import static java.net.HttpURLConnection.HTTP_OK;
 
 public class MessageHandler {
+	
+	//Method to send a request to the server
     public static String makeRequest(Message message){
         
         URL url=null;
@@ -42,7 +44,8 @@ public class MessageHandler {
                 Map.Entry<String,String> pair = (Map.Entry)it.next();
                 con.setRequestProperty(pair.getKey(),pair.getValue());
             }
-            if(message.getData() != null ){ //TODO CHECK POST ETC
+            if(message.getData() != null ){ 
+            	//TODO CHECK POST ETC
             	System.out.println("has data" + message.getData());
                 con.setDoOutput(true);
                 DataOutputStream wr;

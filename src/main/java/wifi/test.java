@@ -1,8 +1,12 @@
 package wifi;
 
+
 import java.io.*;
 import java.net.*;
  
+
+
+//JUST FOR TESTING
 class test {
     public static void main(String args[]) throws Exception {
         String fromClient;

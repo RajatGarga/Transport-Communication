@@ -7,6 +7,8 @@ import tcom.Message;
 import tcom.NetworkingClient;
 import wifi.WifiClient;
 
+
+//JUST FOR TESTING
 public class TestModule {
 
 	public static void main(String[] args) {

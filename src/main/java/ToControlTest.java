@@ -4,6 +4,9 @@ import java.net.UnknownHostException;
 import tcom.Message;
 import wifi.WifiClient;
 
+
+//JUST FOR TESTING
+//Sample of how to send a message to controller module
 public class ToControlTest {
 
 	public static void main(String[] args) {

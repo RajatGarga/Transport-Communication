@@ -6,6 +6,7 @@ import java.net.*;
 import java.util.Scanner;
 
 // Client class
+// JUST FOR TESTING
 public class Client
 {
     public static void main(String[] args) throws IOException

@@ -13,6 +13,11 @@ import java.util.Queue;
 import py4j.GatewayServer;
 
 
+/*
+ * provides all networking services to the modules using a IP based networking interface
+ * also creates a GatewayServer for python to connect in case it is to be used by a module
+ * */
+
 public class WifiClient implements tcom.NetworkingClient{
 	
 	InetAddress ip;
@@ -38,6 +43,7 @@ public class WifiClient implements tcom.NetworkingClient{
 		this.ip = InetAddress.getByName(ip);
 	}
 
+	//Controller module uses this function to register itself as the controller
 	public void registerAsController() throws IOException{
 		dataController = new LinkedList<String>();
 		this.isController = true;
