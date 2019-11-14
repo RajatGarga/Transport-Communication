@@ -4,7 +4,7 @@ Py4J and JRE must be installed in all systems that will be using this module and
 
 First run the CommunicationModule.jar using "java -jar" command
 
-## For communication module
+## For controller module
 1. Run the /bin/ControllerService.jar using "java -jar" command. It will ask for the IP address of the communication module
 2. Use /src/python/controller.py as a template to register the controller with the communication module and to implement the 
 behavior that handles data from other modules.
