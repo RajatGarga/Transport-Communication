@@ -2,7 +2,11 @@ package wifi;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -74,21 +78,21 @@ public class WifiClient implements tcom.NetworkingClient{
 		thread.start();
 	}
 	
-	public String getNextMessage() {
-		if(!this.isController) {
-			return "";
-		}
-		while(dataController.isEmpty()) {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		String s = dataController.poll();
-		return s;
-	}
+//	public String getNextMessage() {
+//		if(!this.isController) {
+//			return "";
+//		}
+//		while(dataController.isEmpty()) {
+//			try {
+//				Thread.sleep(1000);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//		String s = dataController.poll();
+//		return s;
+//	}
 	
 	@Override
 	public void makeConnection() {
@@ -114,6 +118,37 @@ public class WifiClient implements tcom.NetworkingClient{
 		//System.out.println("received :" + received);
 		//this.disconnect();
 		return received;
+	}
+	
+	public void sendFile(String filePath, String fileName, String socketAddress) throws IOException {
+		if(!this.isConnected) {
+			socket = new Socket(ip, 5056);
+			isConnected=true;
+		}
+		dis = new DataInputStream(socket.getInputStream());
+		OutputStream out = socket.getOutputStream();
+		InputStream in = null;
+		dos = new DataOutputStream(out);
+		dos.writeUTF("TRANSFER_FILE");
+		String received = dis.readUTF();
+		if(received.equals("OK")) {
+			dos.writeUTF(fileName);
+			dos.writeUTF(socketAddress);
+			received = dis.readUTF();
+			if(received.equals("READY")) {
+				File file = new File(filePath+fileName);
+				in = new FileInputStream(file);
+				long length = file.length();
+		        byte[] bytes = new byte[64 * 1024];
+		        int count;
+		        while ((count = in.read(bytes)) > 0) {
+		            out.write(bytes, 0, count);
+		        }
+			}
+		}
+		out.close();
+        in.close();
+        socket.close();
 	}
 
 	@Override

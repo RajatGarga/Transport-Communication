@@ -11,8 +11,9 @@ public class Message {
 	String from;
 	String to;
     String size;
-    String priority;
+    public String priority;
     String reply;
+    int starve = 0;
     connInfo connection;
 
     

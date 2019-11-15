@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -62,6 +64,25 @@ class WifiClientHandler extends Thread
                 	System.err.println("New Controller Registered!");
                 	controller_dis = dis;
                 	controller_dos = dos;
+                } else if (received.equals("TRANSFER_FILE")) {
+                	dos.writeUTF("OK");
+                	String fileName = dis.readUTF();
+                	String socketAddress = dis.readUTF();
+                	Socket sock = new Socket(socketAddress, 4444);
+                	OutputStream out = sock.getOutputStream();
+                	DataOutputStream sockout = new DataOutputStream(out);
+                	sockout.writeUTF(fileName);
+                	dos.writeUTF("READY");
+                	InputStream in = this.s.getInputStream();
+                	byte[] bytes = new byte[62*1024];
+        	        int count;
+        	        while ((count = in.read(bytes)) > 0) {
+        	            out.write(bytes, 0, count);
+        	        }
+        	        out.close();
+        	        in.close();
+        	        sock.close();
+                	
                 } else{
                 	Message message = Message.getObjectFromJSON(received);
                 	if(message.isForController()) {
@@ -69,15 +90,16 @@ class WifiClientHandler extends Thread
                 		controller_dos.writeUTF(received);
                 		dos.writeUTF("OK");
                 	}else {
-                		serverResponse = tcom.MessageHandler.makeRequest(message);
-                    	dos.writeUTF(serverResponse);
+                		tcom.MessageHandler.makeRequest(message);
+//                		serverResponse = tcom.MessageHandler.makeRequest(message);
+//                    	dos.writeUTF(serverResponse);
                 	}
                 	//break;
                 	//dos.println(serverResponse);
                 }
             } catch (IOException e) { 
                 //e.printStackTrace(); 
-                this.destroy();
+                //this.destroy();
                 //System.exit(1);
             }
         } 

@@ -49,12 +49,13 @@ public class OBEXPutServer {
                 String gotJSON = buf.toString();
                 System.out.println("got:" + gotJSON);
                 
-                String response = tcom.MessageHandler.makeRequest(Message.getObjectFromJSON(gotJSON));
+                //String response = tcom.MessageHandler.makeRequest(Message.getObjectFromJSON(gotJSON));
+                tcom.MessageHandler.makeRequest(Message.getObjectFromJSON(gotJSON));
                 
-                byte data2[] = response.getBytes("iso-8859-1"); 
-                OutputStream os = op.openOutputStream(); 
-                os.write(data2); 
-                
+//                byte data2[] = response.getBytes("iso-8859-1"); 
+//                OutputStream os = op.openOutputStream(); 
+//                os.write(data2); 
+//                
                 op.close();
                 
                 return ResponseCodes.OBEX_HTTP_OK;

@@ -16,9 +16,9 @@ def newClient(ip):
 def registerController():
     client.sendMessage('REGISTER_CONTROLLER')
 
-def getNextMessage():
-    s = client.getNextMessage()
-    return s
+#def getNextMessage():
+#    s = client.getNextMessage()
+#    return s
 
 '''
     Takes 3 arguments
@@ -38,6 +38,9 @@ def MessageForController(sid, size, priority):
     m = gateway.jvm.Message(sid, size, priority)
     m.forController()
     return m
+
+def sendFile(filePath, fileName, ipAdrr):
+    client.sendFile(filePath, fileName, ipAdrr)
 
 def sendMessage(message):
     code = client.sendMessage(message.getJSONString())

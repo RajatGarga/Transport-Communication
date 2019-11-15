@@ -10,15 +10,88 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 
 public class MessageHandler {
 	
+	static HashMap<Integer, Queue<Message>> queue = new HashMap<>();
+	static int status = 0;
+	
+	private static boolean deployIfValid(Message m) {
+		if(m.starve > 5) {
+			CompletableFuture.runAsync(() -> {
+				deployRequest(m);
+			});
+		}
+		Integer priority = Integer.parseInt(m.priority);
+		if(Math.pow(2, priority) > status) {
+			CompletableFuture.runAsync(() -> {
+				deployRequest(m);
+			});
+			return true; 
+		}else if(Math.pow(2,  priority) == status && m.size.toLowerCase().equals("small")) {
+			CompletableFuture.runAsync(() -> {
+				deployRequest(m);
+			});
+			return true;
+		}
+		m.starve++;
+		return false;
+	}
+	
+	private static void queueRequest(Message m) {
+		if(deployIfValid(m)) {
+			return;
+		}
+		Integer priority = Integer.parseInt(m.priority);
+		if(queue.containsKey(priority)) {
+			queue.get(priority).add(m);
+		}else {
+			queue.put(priority, new LinkedList<Message>());
+			queue.get(priority).add(m);
+		}
+	}
+	
+	private static void deployNext() {
+		Set<Integer> priorities = queue.keySet();
+		if(priorities.size() <= 0) {
+			return;
+		}
+		int max = Integer.MIN_VALUE;
+		for(int i : priorities) {
+			if(i>max) {
+				max = i;
+			}
+		}
+		if(queue.get(max).size() <= 0) {
+			queue.remove(max);
+			return;
+		}
+		Message m = queue.get(max).poll();
+		if(deployIfValid(m)) {
+			if(queue.get(max).size() == 0) {
+				queue.remove(max);
+			}
+		}else {
+			queue.get(max).add(m);
+		}
+	}
+	
+	public static void makeRequest(Message message){
+		queueRequest(message);
+	}
+	
 	//Method to send a request to the server
-    public static String makeRequest(Message message){
-        
+    private static String deployRequest(Message message){
+    	System.out.println("DEPLOYING :: " + message.toString());
+    	status += Math.pow(2, Integer.parseInt(message.priority));
         URL url=null;
         try {
             url = new URL(message.getConnectionURL());
@@ -27,11 +100,14 @@ public class MessageHandler {
             //TODO Handle well
         }
         if(url == null){
+        	status -= Math.pow(2, Integer.parseInt(message.priority));
+        	deployNext();
             return null; //TODO error code
         }
         HttpURLConnection con=null;
         
             try {
+            	System.out.println("making connection!");
 				con = (HttpURLConnection) url.openConnection();
 	            con.setRequestMethod(message.getRequestMethod());
 			} catch (IOException e) {
@@ -81,6 +157,9 @@ public class MessageHandler {
 					// TODO Auto-generated catch block
 					//e.printStackTrace();
 				}
+				status -= Math.pow(2, Integer.parseInt(message.priority));
+				deployNext();
+				System.out.println(response.toString());
                 return response.toString();
             }else {
             	con.disconnect();
@@ -93,7 +172,9 @@ public class MessageHandler {
 					e.printStackTrace();
 				}
             	System.out.println("Retrying...");
-            	return MessageHandler.makeRequest(message);
+            	status -= Math.pow(2, Integer.parseInt(message.priority));
+            	deployNext();
+            	return MessageHandler.deployRequest(message);
             }
     }
 }
