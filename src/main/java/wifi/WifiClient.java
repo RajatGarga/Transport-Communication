@@ -34,7 +34,7 @@ public class WifiClient implements tcom.NetworkingClient{
 	
 	public static void main(String[] args) throws UnknownHostException {
 		WifiClient app = new WifiClient("127.0.0.1");
-		GatewayServer s = new GatewayServer(app);
+		GatewayServer s = new GatewayServer(app, 25335);
 		s.start();
 	}
 	
@@ -132,6 +132,7 @@ public class WifiClient implements tcom.NetworkingClient{
 		dos.writeUTF("TRANSFER_FILE");
 		String received = dis.readUTF();
 		if(received.equals("OK")) {
+			System.out.println("got ok!");
 			dos.writeUTF(fileName);
 			dos.writeUTF(socketAddress);
 			received = dis.readUTF();

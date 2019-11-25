@@ -1,12 +1,17 @@
-from py4j.java_gateway import JavaGateway, GatewayParameters
+from py4j.java_gateway import JavaGateway, CallbackServerParameters, GatewayParameters, launch_gateway
 from py4j.java_gateway import java_import
 import json
 
-gateway = JavaGateway()
+gateway = JavaGateway(gateway_parameters=GatewayParameters(port=25335))
 client = gateway.entry_point
 
+#gateway = JavaGateway(gateway_parameters=GatewayParameters(port=25335))
+#python_port = gateway.get_callback_server().get_listening_port()
+#gateway.java_gateway_server.resetCallbackClient(gateway.java_gateway_server.getCallbackClient().getAddress(), python_port)
+#client = gateway.entry_point
+
 def newClient(ip):
-    gateway = JavaGateway()
+    gateway = JavaGateway(gateway_parameters=GatewayParameters(port=25335))
     client = gateway.entry_point
     java_import(gateway.jvm, 'tcom.Message')
     client.setIp(ip)

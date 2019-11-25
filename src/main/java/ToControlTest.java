@@ -13,8 +13,8 @@ public class ToControlTest {
 		// TODO Auto-generated method stub
 		try {
 			WifiClient client = new WifiClient("127.0.0.1");
-			Message m= new Message("testModule", "small", "1");
-			m.setData("Hello controller!");
+			Message m= new Message("module1", "small", "1");
+			m.setData("1");
 			m.forController();
 			client.sendMessage(m.getJSONString());
 			//System.exit(0);

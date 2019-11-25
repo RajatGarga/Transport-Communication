@@ -11,7 +11,7 @@ client = gateway.jvm.WifiClient("127.0.0.1")
 client.makeConnection()
 
 m = gateway.jvm.Message('controller', 'small', '1')
-m.setConnection("https://ennubno89hle.x.pipedream.net", "POST")
+m.setConnection("https://postb.in/1574061120923-6563683485146", "POST")
 m.addRequestProperty("key1", "value1")
 m.addRequestProperty("key2", "value2")
 m.addRequestProperty("key3", "value3")

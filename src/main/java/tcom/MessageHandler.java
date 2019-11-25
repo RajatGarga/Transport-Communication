@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,6 +17,8 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+
+import wifi.WifiClient;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 
@@ -72,6 +75,7 @@ public class MessageHandler {
 		}
 		if(queue.get(max).size() <= 0) {
 			queue.remove(max);
+			deployNext();
 			return;
 		}
 		Message m = queue.get(max).poll();
@@ -158,8 +162,22 @@ public class MessageHandler {
 					//e.printStackTrace();
 				}
 				status -= Math.pow(2, Integer.parseInt(message.priority));
-				deployNext();
 				System.out.println(response.toString());
+				WifiClient client;
+				try {
+					client = new WifiClient("127.0.0.1");
+					Message m= new Message("server", "small", "1");
+					m.setData(response.toString());
+					m.forController();
+					client.sendMessage(m.getJSONString());
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+                deployNext();
                 return response.toString();
             }else {
             	con.disconnect();

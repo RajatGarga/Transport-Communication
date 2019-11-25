@@ -65,16 +65,18 @@ class WifiClientHandler extends Thread
                 	controller_dis = dis;
                 	controller_dos = dos;
                 } else if (received.equals("TRANSFER_FILE")) {
+                	System.out.println("Getting Ready to receive a file");
                 	dos.writeUTF("OK");
                 	String fileName = dis.readUTF();
                 	String socketAddress = dis.readUTF();
-                	Socket sock = new Socket(socketAddress, 4444);
+                	Socket sock = new Socket(socketAddress, 4444); //socket on the server
                 	OutputStream out = sock.getOutputStream();
                 	DataOutputStream sockout = new DataOutputStream(out);
                 	sockout.writeUTF(fileName);
                 	dos.writeUTF("READY");
+                	System.out.println("Ready!");
                 	InputStream in = this.s.getInputStream();
-                	byte[] bytes = new byte[62*1024];
+                	byte[] bytes = new byte[64*1024];
         	        int count;
         	        while ((count = in.read(bytes)) > 0) {
         	            out.write(bytes, 0, count);
@@ -98,6 +100,7 @@ class WifiClientHandler extends Thread
                 	//dos.println(serverResponse);
                 }
             } catch (IOException e) { 
+            	this.stop();
                 //e.printStackTrace(); 
                 //this.destroy();
                 //System.exit(1);

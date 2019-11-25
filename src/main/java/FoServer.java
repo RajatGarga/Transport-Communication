@@ -41,12 +41,13 @@ public class FoServer {
 	        DataInputStream dis = new DataInputStream(in);
 	        String fileName = dis.readUTF();
 	        try {
+	        	System.out.println("D:\\"+fileName);
 	            out = new FileOutputStream("D:\\"+fileName);
 	        } catch (FileNotFoundException ex) {
 	            System.out.println("File not found. ");
 	        }
 
-	        byte[] bytes = new byte[62*1024];
+	        byte[] bytes = new byte[64*1024];
 
 	        int count;
 	        while ((count = in.read(bytes)) > 0) {

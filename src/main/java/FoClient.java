@@ -14,9 +14,9 @@ public class FoClient {
         long startTime; //start time
         long firstTime;
         int prevCount = 0;
-        socket = new Socket(host, 4444);
+        socket = new Socket("192.168.43.194", 4444);
 
-        File file = new File("C:\\Users\\rajat garga\\Downloads\\Video\\joker.mp4");
+        File file = new File("C:\\Users\\rajat garga\\Downloads\\4ftResult.pdf");
         // Get the size of the file
         long length = file.length();
         byte[] bytes = new byte[64 * 1024];
