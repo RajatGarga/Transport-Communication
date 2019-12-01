@@ -92,6 +92,7 @@ class WifiClientHandler extends Thread
                 		controller_dos.writeUTF(received);
                 		dos.writeUTF("OK");
                 	}else {
+                		dos.writeUTF("OK");
                 		tcom.MessageHandler.makeRequest(message);
 //                		serverResponse = tcom.MessageHandler.makeRequest(message);
 //                    	dos.writeUTF(serverResponse);

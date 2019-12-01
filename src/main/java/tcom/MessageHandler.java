@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -113,7 +114,11 @@ public class MessageHandler {
         	deployNext();
             return null; //TODO error code
         }
-        OkHttpClient httpClient = new OkHttpClient();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.connectTimeout(30, TimeUnit.SECONDS); 
+        builder.readTimeout(30, TimeUnit.SECONDS); 
+        builder.writeTimeout(30, TimeUnit.SECONDS); 
+        OkHttpClient httpClient = builder.build();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         RequestBody formBody = RequestBody.create(JSON,message.getData());
         Request request = new Request.Builder()
@@ -123,12 +128,28 @@ public class MessageHandler {
         try (Response response = httpClient.newCall(request).execute()) {
             if (response.isSuccessful()) {
             	// Get response body
-            	System.out.println(response.body().string());
-            	return response.body().toString();
+            	String responseBody = response.body().string(); 
+            	System.out.println(responseBody);
+            	WifiClient client;
+				try {
+					client = new WifiClient("127.0.0.1");
+					Message m= new Message("server", "small", "1");
+					m.setData(responseBody);
+					m.forController();
+					client.sendMessage(m.getJSONString());
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            	return responseBody;
             }
         }catch(Exception e) {
         	e.printStackTrace();
         }
+        return "";
         /*
         HttpURLConnection con=null;
             try {
