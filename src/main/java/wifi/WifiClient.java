@@ -114,10 +114,9 @@ public class WifiClient implements tcom.NetworkingClient{
 		dis = new DataInputStream(socket.getInputStream());
 		dos = new DataOutputStream(socket.getOutputStream());
 		dos.writeUTF(s);
-		String received = dis.readUTF(); 
 		//System.out.println("received :" + received);
 		//this.disconnect();
-		return received;
+		return "";
 	}
 	
 	public void sendFile(String filePath, String fileName, String socketAddress) throws IOException {

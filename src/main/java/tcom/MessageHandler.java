@@ -18,6 +18,11 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import wifi.WifiClient;
 
 import static java.net.HttpURLConnection.HTTP_OK;
@@ -108,8 +113,24 @@ public class MessageHandler {
         	deployNext();
             return null; //TODO error code
         }
+        OkHttpClient httpClient = new OkHttpClient();
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody formBody = RequestBody.create(JSON,message.getData());
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+        try (Response response = httpClient.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+            	// Get response body
+            	System.out.println(response.body().string());
+            	return response.body().toString();
+            }
+        }catch(Exception e) {
+        	e.printStackTrace();
+        }
+        /*
         HttpURLConnection con=null;
-        
             try {
             	System.out.println("making connection!");
 				con = (HttpURLConnection) url.openConnection();
@@ -126,25 +147,28 @@ public class MessageHandler {
             }
             if(message.getData() != null ){ 
             	//TODO CHECK POST ETC
-            	System.out.println("has data" + message.getData());
+            	String payload = message.getData();
+            	int st = payload.indexOf("{");
+            	int end = payload.lastIndexOf("}");
+            	System.out.println("has data" + payload.substring(st, end+1));
                 con.setDoOutput(true);
                 DataOutputStream wr;
 				try {
 					wr = new DataOutputStream(con.getOutputStream());
-	                wr.writeUTF(message.getData());
+	                wr.writeUTF(payload.substring(st, end+1));
 	                wr.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					//e.printStackTrace();
 				}
             }
-            int responseCode;
+            int responseCode = -999;
 			try {
 				responseCode = con.getResponseCode();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				//e.printStackTrace();
-				responseCode = 404;
+				//responseCode = 404;
 			}
             if(responseCode == HTTP_OK){
                 System.out.println("Got good response!");
@@ -181,10 +205,10 @@ public class MessageHandler {
                 return response.toString();
             }else {
             	con.disconnect();
-            	System.out.println("Didn't get good response : Network Failure!");
-            	System.out.println("Will try again after 30 seconds");
+            	System.out.println("Didn't get good response ("+ responseCode +") : Network Failure!");
+            	System.out.println("Will try again after 20 seconds");
             	try {
-					Thread.sleep(30000);
+					Thread.sleep(20000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -193,6 +217,6 @@ public class MessageHandler {
             	status -= Math.pow(2, Integer.parseInt(message.priority));
             	deployNext();
             	return MessageHandler.deployRequest(message);
-            }
+            }*/
     }
 }
